@@ -40,6 +40,7 @@ def solver( X, y, timeout, spacing ):
 
         w0 = np.zeros((d,))
         w = w0
+        w_ones = np.ones((d,))
         w_old = w0
         #parameters
         alpha = 0.075
@@ -63,7 +64,7 @@ def solver( X, y, timeout, spacing ):
 #  Non Editable Region Ending  #
 ################################
 
-                # Write all code to perform your method updates here within the infinite while loop
+				# Write all code to perform your method updates here within the infinite while loop
                 # The infinite loop will terminate once timeout is reached
                 # Do not try to bypass the timer check e.g. by using continue
                 # It is very easy for us to detect such bypasses which will be strictly penalized
@@ -78,16 +79,14 @@ def solver( X, y, timeout, spacing ):
                 # This way, w will always store the average and can be returned at any time
                 # In this scheme, w plays the role of the "cumulative" variable in the course module optLib
                 # w_run on the other hand, plays the role of the "theta" variable in the course module optLib
-
-        while(1):
-               b = count/(count+1)
-               count = count+1
-               w_temp = w + (w-w_old)*b
-               g = 2*(np.matmul(np.transpose(X),(np.matmul(X,w_temp) - y)))
-               w_old = w
-               ind = alpha/(count**0.5)
-               w = w_temp - (alpha/(count**0.5))*g
-               w = np.multiply(np.sign(w),np.maximum(np.abs(w),w0))
+                b = count/(count+1)
+                count = count+1
+                w_temp = w + (w-w_old)*b
+                g = 2*(np.matmul(np.transpose(X),(np.matmul(X,w_temp) - y)))
+                w_old = w
+                ind = alpha/(count**0.5)
+                w = w_temp - (alpha/(count**0.5))*g
+                w = np.multiply(np.sign(w),np.maximum(np.abs(w)-w_ones*alpha/(count**0.5),w0))
 
         
         return (w, totTime) # This return statement will never be reached
